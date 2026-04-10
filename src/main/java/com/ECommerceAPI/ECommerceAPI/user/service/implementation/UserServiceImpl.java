@@ -1,5 +1,6 @@
 package com.ECommerceAPI.ECommerceAPI.user.service.implementation;
 
+import com.ECommerceAPI.ECommerceAPI.exceptions.ResourceNotFoundException;
 import com.ECommerceAPI.ECommerceAPI.user.dto.AuthResponse;
 import com.ECommerceAPI.ECommerceAPI.user.dto.LoginRequest;
 import com.ECommerceAPI.ECommerceAPI.user.dto.RegisterRequest;
@@ -23,10 +24,10 @@ public class UserServiceImpl  implements UserService {
     public AuthResponse createUser(RegisterRequest request) {
 
         if(userRepository.existsByEmail(request.getEmail())){
-            throw new RuntimeException("Email already exists");
+            throw new ResourceNotFoundException("Email already exists");
         }
         if(userRepository.existsByUserName(request.getUserName())){
-            throw new RuntimeException("Username already exists");
+            throw new ResourceNotFoundException("Username already exists");
         }
         UserEntity entity = new UserEntity();
         entity.setUserName(request.getUserName());
@@ -44,7 +45,7 @@ public class UserServiceImpl  implements UserService {
     public AuthResponse login(LoginRequest request) {
 
         UserEntity entity = userRepository.findByUserName(request.getUserName())
-                .orElseThrow(()-> new RuntimeException("Username not found"));
+                .orElseThrow(()-> new ResourceNotFoundException("Username not found"));
         if(!passwordEncoder.matches(request.getPassword(), entity.getPassword()))
         {
             throw new RuntimeException("Incorrect password");

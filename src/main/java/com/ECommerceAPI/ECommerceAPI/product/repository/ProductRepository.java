@@ -13,7 +13,7 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
     List<ProductEntity> findByActiveTrueAndNameContainingIgnoreCase(String name);
 //    List<ProductEntity> findByActiveTrueAndfindByCategory(Category category);
     List<ProductEntity> findByActiveTrueAndCategoryAndNameContainingIgnoreCase(Category category, String name);
-    List<ProductEntity> findByActiveTrue();
+    List<ProductEntity>  findByActiveTrue();
     List<ProductEntity> findByActiveTrueAndCategory(Category category);
 
 

@@ -8,7 +8,6 @@ import com.ECommerceAPI.ECommerceAPI.product.repository.ProductRepository;
 import com.ECommerceAPI.ECommerceAPI.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,24 +53,52 @@ public class ProductServiceImpl implements ProductService {
                 .stream().map(this::mapToResponse).collect(Collectors.toList());
     }
 
-//    @Override
-//    public List<ProductResponse> getActiveProductAndCategory(Category category) {
-//        return repository.findByActiveTrueAndCategory(category)
-//                .stream().map(this::mapToResponse).collect(Collectors.toList());
-//    }
-
     @Override
     public void deleteProduct(Long id) {
         ProductEntity entity = repository.findById(id).orElseThrow(()->new RuntimeException("Product Not Found"));
+        if(!entity.isActive()){
+            throw new RuntimeException("Product already deleted");
+        }
         entity.setActive(false);
+
         repository.save(entity);
     }
 
     @Override
     public void restoreProduct(Long id) {
         ProductEntity entity = repository.findById(id).orElseThrow(()->new RuntimeException("Product Not Found"));
+        if(entity.isActive()){
+            throw new RuntimeException("Product already restored");
+        }
         entity.setActive(true);
         repository.save(entity);
+    }
+
+    @Override
+    public Long getProductCount() {
+        Long productCount = repository.count();
+        System.out.println("Product Count is : "+ productCount);
+        return productCount;
+    }
+
+    @Override
+    public void deleteAllProducts(List<Long> ids) {
+        List<ProductEntity> prods = repository.findAllById(ids);
+        repository.deleteAllById(ids);
+        repository.deleteAll(prods);
+//        repository.deleteAllByIdInBatch();
+
+//        if(prods.size() == ids.size()){
+//
+//        }
+//
+//        if(prods.equals(repository.findAllById(ids))){
+//            repository.deleteAllById(ids);
+//        }
+//        else{
+//
+//        }
+
     }
 
 

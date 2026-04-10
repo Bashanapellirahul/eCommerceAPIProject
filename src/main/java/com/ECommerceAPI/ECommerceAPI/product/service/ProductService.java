@@ -17,4 +17,7 @@ public interface ProductService {
 
     void deleteProduct(Long id);
     void restoreProduct(Long id);
+
+    Long getProductCount();
+    void deleteAllProducts(List<Long> ids);
 }
